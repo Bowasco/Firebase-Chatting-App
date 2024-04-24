@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
+    <title>Registration Page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="redirect">
+            <a id="sign" href="#" class="active">SIGN UP</a>
+            <a id="log" href="login.html">LOG IN</a>
+        </div>
+        <div class="inner_div">
+            <h1>SIGN UP FOR FREE</h1>
+            <div id="message"></div>
+            <form>
+                <input type="text" id="username" placeholder="Username">
+                <input type="email" id="email" placeholder="Your Email">
+                <input type="number" id="phoneNum" placeholder="Your Phone">
+                <input type="password" id="password" placeholder="Password">
+                <input type="password" id="password_2" placeholder="Confirm Password">
+            </form>
+            <button id="signup" type="button" onclick="registerUser(event)">SIGN UP</button>
+            <div style="text-align: center; color: white; padding: 10px;">
+                <span>Or</span>
+            </div>
+            <button onclick="withGoogle()">SIGNUP WITH GOOGLE</button>
+        </div>
+    </div>
+    <table id="table">
+
+    </table>
+</body>
+
+</html>
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBDvzWggRmE_H78UdXFARMQL1rlMQk8NBE",
+        authDomain: "chat-2ced9.firebaseapp.com",
+        projectId: "chat-2ced9",
+        storageBucket: "chat-2ced9.appspot.com",
+        messagingSenderId: "669575328115",
+        appId: "1:669575328115:web:172f86346b37fe83d01506"
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    var provider = new firebase.auth.GoogleAuthProvider();
+</script>
+
+<script>
+    let message = document.getElementById("message")
+    let email = document.getElementById('email')
+    let password = document.getElementById('password')
+
+    function registerUser(ev) {
+        ev.preventDefault();
+
+        firebase.auth().createUserWithEmailAndPassword(email.value, password.value)
+            .then((userCredential) => {
+                // Signed in 
+                var user = userCredential.user;
+                console.log(user);
+                alert("Registration Successful")
+                message.innerHTML = `<h3>Registration successful</h3>`
+                // ...
+            })
+            .catch((error) => {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.log(errorMessage);
+                message.innerHTML = `<h3>${errorMessage}</h3>`
+                // ..
+            });
+    }
+
+    function withGoogle() {
+        firebase.auth()
+            .signInWithPopup(provider)
+            .then((result) => {
+                /** @type {firebase.auth.OAuthCredential} */
+                var credential = result.credential;
+
+                // This gives you a Google Access Token. You can use it to access the Google API.
+                var token = credential.accessToken;
+                // The signed-in user info.
+                var user = result.user;
+                // IdP data available in result.additionalUserInfo.profile.
+                // ...
+                alert("Signed In")
+            }).catch((error) => {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;76655555555555555555555555555555555555555555555555
+                // The email of the user's account used.
+                var email = error.email;
+                // The firebase.auth.AuthCredential type that was used.
+                var credential = error.credential;
+                // ...
+                console.log(errorMessage);
+            });
+    }
+</script>
